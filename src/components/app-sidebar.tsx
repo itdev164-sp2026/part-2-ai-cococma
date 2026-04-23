@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -29,6 +30,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Header } from "@/components/header";
 import { FolderOpen, Home, Settings } from "lucide-react";
 
+const PAGE_META: Record<string, { label: string; href: string }> = {
+  "/":          { label: "Overview",  href: "/" },
+  "/projects":  { label: "Projects",  href: "/projects" },
+  "/settings":  { label: "Settings",  href: "/settings" },
+};
+
 function NavItems() {
   const { setOpenMobile } = useSidebar();
   return (
@@ -43,7 +50,7 @@ function NavItems() {
       </SidebarMenuItem>
       <SidebarMenuItem>
         <SidebarMenuButton asChild tooltip="Projects" onClick={() => setOpenMobile(false)}>
-          <Link href="#projects">
+          <Link href="/projects">
             <FolderOpen />
             <span>Projects</span>
           </Link>
@@ -62,19 +69,22 @@ function NavItems() {
 }
 
 export function AppSidebar({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const page = PAGE_META[pathname] ?? { label: pathname.replace("/", ""), href: pathname };
+
   return (
     <TooltipProvider>
       <SidebarProvider>
         <Sidebar collapsible="icon" className="shrink-0 rounded-r-2xl border-r border-border bg-card">
           <SidebarHeader className="border-b border-border px-3 py-4">
             <div className="flex items-center justify-between gap-2">
-              <div className="space-y-1">
-                <p className="text-sm font-semibold">Dashboard</p>
-                <p className="text-xs text-muted-foreground">
+              <div className="space-y-1 overflow-hidden group-data-[collapsible=icon]:hidden">
+                <p className="text-sm font-semibold truncate">Dashboard</p>
+                <p className="text-xs text-muted-foreground truncate">
                   Manage your site and profile
                 </p>
               </div>
-              <SidebarTrigger />
+              <SidebarTrigger className="shrink-0" />
             </div>
           </SidebarHeader>
 
@@ -86,7 +96,7 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
           </SidebarContent>
 
           <SidebarFooter className="border-t border-border px-3 py-4">
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground group-data-[collapsible=icon]:hidden">
               Tip: press <kbd className="rounded border border-border px-1.5 py-0.5 font-mono">Ctrl + B</kbd> to collapse.
             </p>
           </SidebarFooter>
@@ -112,13 +122,13 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
-                      <BreadcrumbPage>Overview</BreadcrumbPage>
+                      <BreadcrumbPage>{page.label}</BreadcrumbPage>
                     </BreadcrumbItem>
                   </BreadcrumbList>
                 </Breadcrumb>
               </div>
               <div className="rounded-2xl border border-border bg-background/80 px-3 py-2 text-sm text-muted-foreground shadow-sm">
-                Current page: Overview
+                Current page: {page.label}
               </div>
             </div>
           </div>
