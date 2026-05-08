@@ -5,6 +5,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/server";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -19,11 +20,16 @@ export const metadata: Metadata = {
     "Web development student | Full-stack developer showcasing skills in Next.js, React, and modern web technologies",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
       <body className={`${inter.variable} font-sans antialiased`}>
@@ -33,7 +39,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AppSidebar>{children}</AppSidebar>
+          <AppSidebar user={user}>{children}</AppSidebar>
           <Toaster />
         </ThemeProvider>
       </body>

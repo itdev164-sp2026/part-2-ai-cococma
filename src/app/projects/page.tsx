@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import {
   Card,
   CardContent,
@@ -16,6 +16,7 @@ interface Project {
   title: string;
   description: string;
   status: ProjectStatus;
+  created_at: string;
 }
 
 const statusStyles: Record<ProjectStatus, string> = {
@@ -25,6 +26,7 @@ const statusStyles: Record<ProjectStatus, string> = {
 };
 
 export default async function ProjectsPage() {
+  const supabase = await createClient();
   const { data: projects, error } = await supabase
     .from("projects")
     .select("*")
@@ -77,7 +79,11 @@ export default async function ProjectsPage() {
                     <CardDescription>{project.description}</CardDescription>
                   )}
                 </CardHeader>
-                <CardContent />
+                <CardContent>
+                  <p className="text-xs text-muted-foreground">
+                    Created {new Date(project.created_at).toLocaleDateString()}
+                  </p>
+                </CardContent>
               </Card>
             );
           })}
