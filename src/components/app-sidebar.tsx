@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { User } from "@supabase/supabase-js";
+import { signOut } from "@/app/actions";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,13 +24,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarSeparator,
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Header } from "@/components/header";
-import { FolderOpen, Home, Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { FolderOpen, Home, LogOut, Settings } from "lucide-react";
 
 const PAGE_META: Record<string, { label: string; href: string }> = {
   "/":          { label: "Overview",  href: "/" },
@@ -68,8 +70,17 @@ function NavItems() {
   );
 }
 
-export function AppSidebar({ children }: { children: React.ReactNode }) {
+export function AppSidebar({
+  children,
+  user,
+}: {
+  children: React.ReactNode;
+  user: User | null;
+}) {
   const pathname = usePathname();
+
+  if (pathname === "/login") return <>{children}</>;
+
   const page = PAGE_META[pathname] ?? { label: pathname.replace("/", ""), href: pathname };
 
   return (
@@ -95,7 +106,23 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
             </SidebarGroup>
           </SidebarContent>
 
-          <SidebarFooter className="border-t border-border px-3 py-4">
+          <SidebarFooter className="border-t border-border px-3 py-4 space-y-3">
+            {user && (
+              <div className="group-data-[collapsible=icon]:hidden space-y-2">
+                <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                <form action={signOut}>
+                  <Button
+                    type="submit"
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start gap-2 px-2"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Sign out
+                  </Button>
+                </form>
+              </div>
+            )}
             <p className="text-xs text-muted-foreground group-data-[collapsible=icon]:hidden">
               Tip: press <kbd className="rounded border border-border px-1.5 py-0.5 font-mono">Ctrl + B</kbd> to collapse.
             </p>
