@@ -14,7 +14,7 @@ export default function HomePage() {
               Web Development Student | AI-Native Full-Stack Developer
             </p>
             <p className="text-base leading-relaxed max-w-2xl">
-              I'm a passionate web development student building modern, responsive applications using Next.js, React, and Tailwind CSS. I'm dedicated to learning AI-assisted development workflows and creating seamless user experiences through full-stack development.
+              I&apos;m a passionate web development student building modern, responsive applications using Next.js, React, and Tailwind CSS. I&apos;m dedicated to learning AI-assisted development workflows and creating seamless user experiences through full-stack development.
             </p>
           </div>
           <div className="flex-shrink-0">
