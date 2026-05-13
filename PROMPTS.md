@@ -224,3 +224,87 @@ It added 4 files and modified 4 files and correctly used getuser which made the 
 
 I didn't have to manually change anything the agent handled all exceptions well and created a good finished product,
 i did have to reprompt in order to be able to add in new projects again but was able to figure it out quickly.
+
+
+## Activity 6: Deployment, Webhooks, & AI-Testing
+
+### Prompt 1
+
+**What I asked:**
+
+I have a Next.js app with Supabase Auth. Using @workspace context to
+understand the app structure, write an End-to-End (E2E) test file at
+tests/auth.spec.ts using Playwright.
+
+The tests should verify:
+
+1. LOGIN PAGE VISIBLE: Navigate to /login and confirm the login form
+   is visible (check for email input, password input, and submit button).
+
+2. REDIRECT AFTER LOGIN: After a successful login with valid credentials,
+   the user is redirected to the dashboard or projects page.
+
+3. SIDEBAR NAVIGATION: After login, verify that the sidebar navigation
+   links are visible: "Overview", "Projects", and "Settings".
+
+Requirements:
+- Use role-based locators (getByRole, getByLabel, getByText) instead of
+  CSS selectors or test IDs. This makes tests more accessible and resilient
+  to UI changes.
+- Add clear test descriptions that explain what each test verifies.
+- Handle the async nature of navigation and page loads with proper
+  Playwright waiting strategies.
+- Read test credentials from process.env.TEST_USER_EMAIL and
+  process.env.TEST_USER_PASSWORD. Do not hardcode credentials. If those
+  variables are not set, the credentialed tests should skip with a clear
+  message rather than fail.
+
+**What happened:**
+
+it did use role based authenticators however only 2 out of the 3 were passed on the first go
+
+### Prompt 2
+
+**What I asked:**
+
+There is a problem with the 3rd playwright test and it is saying this:
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('link', { name: 'Overview' })
+    Expected: visible
+    Error: strict mode violation: getByRole('link', { name: 'Overview' }) resolved to 2 elements:
+        1) <a href="/" data-size="default" data-active="false" data-state="closed" data-sidebar="menu-button" data-slot="sidebar-menu-button" class="peer/menu-button group/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left ring-sidebar-ring outline-hidden transition-[width,height,padding] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! focus-visible:ring-2 active:bg-sidebar-accent active:text-sideba…>…</a> aka locator('ul').getByRole('link', { name: 'Overview' })
+        2) <span role="link" aria-current="page" aria-disabled="true" data-slot="breadcrumb-page" class="font-normal text-foreground">Overview</span> aka getByLabel('breadcrumb').getByRole('link', { name: 'Overview' })
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('link', { name: 'Overview' })
+
+
+      52 |     await page.waitForURL("/", { timeout: 10_000 });
+      53 |
+    > 54 |     await expect(page.getByRole("link", { name: "Overview" })).toBeVisible();
+         |                                                                ^
+      55 |     await expect(page.getByRole("link", { name: "Projects" })).toBeVisible();
+      56 |     await expect(page.getByRole("link", { name: "Settings" })).toBeVisible();
+      57 |   });
+        at C:\Users\Cole\Documents\GitHub\WebDev2\part-2-ai-cococma\tests\auth.spec.ts:54:64
+
+    Error Context: test-results\auth-Authentication-sideba-54eb9--Settings-links-after-login\error-context.md
+
+  1 failed
+    tests\auth.spec.ts:36:7 › Authentication › sidebar shows Overview, Projects, and Settings links after login 
+  2 passed (7.3s)
+can you help me?
+
+**What happened:**
+
+The model found the problem pretty quickly having to do with the breadcrumb that made it register 2 of the same things and fixed it in the first round
+
+### Reflection
+
+I dont see the tests as clearly for sure especially with the package helping however it seems to do a very good job at making specific error catches
+
+### Course Reflection
+
+This was a very interesting experiment and its definitely a very useful tool in defined spaces however i think having prior knowledge of how systems and programming works makes a larger difference than some might tihnk.
