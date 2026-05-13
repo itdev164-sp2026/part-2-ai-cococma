@@ -177,3 +177,50 @@ All files were successfuly updated/created and it was able to work within the co
 ### Reflection
 
 This has definitely taught me a bit more about howthe backend and front end speak to each other, it also makes me wary of potential cyber security risks and the need for authentication that i am excited to get to in the next assignment.
+
+## Activity 5: Securing the App with Supabase Auth
+
+### Prompt 1
+
+Implement a complete email/password authentication flow for this Next.js 15
+App Router project using @supabase/ssr. Here is what I need:
+
+1. SUPABASE CLIENTS: Create server-side Supabase client utilities in
+   src/lib/supabase/ that work correctly with Next.js cookies. I need
+   separate clients for Server Components, Server Actions, and Middleware.
+
+2. LOGIN PAGE: Create a page at src/app/(auth)/login/page.tsx with a
+   shadcn/ui card-based login form. It should support both "Sign In"
+   and "Sign Up" (toggle between them or use tabs). Handle the auth
+   via Server Actions, not client-side fetch.
+
+3. MIDDLEWARE: Create a middleware.ts file at src/middleware.ts (next to
+   the app directory — Next.js looks for middleware as a sibling of app)
+   that:
+   - Refreshes the user's auth session on every request
+   - Protects the /projects routes — redirect unauthenticated users to /login
+   - Allows unauthenticated access to /login
+   - Uses supabase.auth.getUser() (NOT getSession()) for verification
+
+4. SIGN OUT: Add a "Sign Out" button to the existing sidebar component
+   (src/components/app-sidebar.tsx) that calls a Server Action to sign
+   the user out and redirect to /login. The button must only render
+   when an authenticated user is present — pass the user as a prop from
+   the root layout (which will need to fetch it via the server Supabase
+   client) and gate the Sign Out UI on that prop.
+
+5. UPDATE DATA QUERIES: Modify the projects page and the create-project
+   Server Action to use the authenticated Supabase client so that RLS
+   policies filter data per user.
+
+Use @workspace to understand the existing project structure. Do not remove
+or break existing functionality — integrate auth around it.
+
+**What happened:**
+
+It added 4 files and modified 4 files and correctly used getuser which made the transition seemless
+
+### Reflection
+
+I didn't have to manually change anything the agent handled all exceptions well and created a good finished product,
+i did have to reprompt in order to be able to add in new projects again but was able to figure it out quickly.
