@@ -81,3 +81,8 @@ src/
 | `npm run build` | Production build             |
 | `npm run start` | Serve production build       |
 | `npm run lint`  | Run ESLint                   |
+
+
+## Live Site
+
+Deployed at: [[your-vercel-url](https://part-2-ai-cococma.vercel.app/)]
